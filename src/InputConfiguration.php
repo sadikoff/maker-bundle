@@ -13,6 +13,8 @@ namespace Symfony\Bundle\MakerBundle;
 
 final class InputConfiguration
 {
+    private $arguments = [];
+
     private $nonInteractiveArguments = [];
 
     /**
@@ -29,5 +31,19 @@ final class InputConfiguration
     public function getNonInteractiveArguments(): array
     {
         return $this->nonInteractiveArguments;
+    }
+
+    public function argument(string $argumentName, bool $ai = true, array $autocomplete = null, callable $validator = null)
+    {
+        $this->arguments[$argumentName] = [
+            'automatic' => $ai,
+            'validator' => $validator,
+            'autocomplete' => $autocomplete,
+        ];
+    }
+
+    public function get(string $argumentName): array
+    {
+        return array_key_exists($argumentName, $this->arguments) ? $this->arguments[$argumentName] : [];
     }
 }

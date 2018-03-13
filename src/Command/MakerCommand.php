@@ -24,6 +24,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Used as the Command class for the makers.
@@ -75,11 +76,24 @@ final class MakerCommand extends Command
                 continue;
             }
 
-            if (in_array($argument->getName(), $this->inputConfig->getNonInteractiveArguments(), true)) {
+            $argumentConfig = $this->inputConfig->get($argument->getName());
+
+            if (empty($argumentConfig)) {
+                $value = $this->io->ask($argument->getDescription(), $argument->getDefault(), [Validator::class, 'notBlank']);
+                $input->setArgument($argument->getName(), $value);
+
                 continue;
             }
 
-            $value = $this->io->ask($argument->getDescription(), $argument->getDefault(), [Validator::class, 'notBlank']);
+            if (false === $argumentConfig['automatic']) {
+                continue;
+            }
+
+            $question = new Question($argument->getDescription(), $argument->getDefault());
+            $question->setValidator(null === $argumentConfig['validator'] ? [Validator::class, 'notBlank'] : $argumentConfig['validator']);
+            $question->setAutocompleterValues($argumentConfig['autocomplete']);
+
+            $value = $this->io->askQuestion($question);
             $input->setArgument($argument->getName(), $value);
         }
 

@@ -58,7 +58,14 @@ final class MakeCrud extends AbstractMaker
             ->setHelp(file_get_contents(__DIR__.'/../Resources/help/MakeCrud.txt'))
         ;
 
-        $inputConfig->setArgumentAsNonInteractive('entity-class');
+        $entities = $this->entityHelper->getEntitiesForAutocomplete();
+
+        $inputConfig->argument(
+            'entity-class',
+            true,
+            $entities,
+            function ($answer) use ($entities) {return Validator::entityExists($answer, $entities); }
+        );
     }
 
     public function interact(InputInterface $input, ConsoleStyle $io, Command $command)
