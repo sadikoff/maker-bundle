@@ -33,16 +33,16 @@ final class InputConfiguration
         return $this->nonInteractiveArguments;
     }
 
-    public function argument(string $argumentName, bool $ai = true, array $autocomplete = null, callable $validator = null)
+    public function setArgumentConfig(string $argumentName, bool $automatic = true, array $autocomplete = null, callable $validator = null)
     {
         $this->arguments[$argumentName] = [
-            'automatic' => $ai,
+            'automatic' => $automatic,
             'validator' => $validator,
             'autocomplete' => $autocomplete,
         ];
     }
 
-    public function get(string $argumentName): array
+    public function getArgumentConfig(string $argumentName): array
     {
         return array_key_exists($argumentName, $this->arguments) ? $this->arguments[$argumentName] : [];
     }

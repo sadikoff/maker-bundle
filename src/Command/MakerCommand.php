@@ -76,7 +76,7 @@ final class MakerCommand extends Command
                 continue;
             }
 
-            $argumentConfig = $this->inputConfig->get($argument->getName());
+            $argumentConfig = $this->inputConfig->getArgumentConfig($argument->getName());
 
             if (empty($argumentConfig)) {
                 $value = $this->io->ask($argument->getDescription(), $argument->getDefault(), [Validator::class, 'notBlank']);

@@ -60,7 +60,7 @@ final class MakeCrud extends AbstractMaker
 
         $entities = $this->entityHelper->getEntitiesForAutocomplete();
 
-        $inputConfig->argument(
+        $inputConfig->setArgumentConfig(
             'entity-class',
             true,
             $entities,
